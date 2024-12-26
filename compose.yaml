@@ -1,0 +1,14 @@
+name: cappsnews
+services:
+  postgres:
+    container_name: cappsnews_db
+    image: 'postgres:17'
+    environment:
+      - 'POSTGRES_DB=cappsnews'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=cappsnews'
+    ports:
+      - '5433:5432'
+volumes:
+  postgres_data:
+    driver: local
