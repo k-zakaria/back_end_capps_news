@@ -2,6 +2,7 @@ package org.capps.news.web.exception;
 
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.capps.news.web.exception.artilce.ArticleNotFoundException;
 import org.capps.news.web.exception.user.UserNameAlreadyExistsException;
 import org.capps.news.web.exception.user.UserNotFoundException;
 import org.capps.news.web.exception.user.UsernameOrPasswordInvalidException;
@@ -111,6 +112,12 @@ public class GlobalExceptionHandler {
         responseBody.put("path", request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
+    }
+
+    //// Article Exeption
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<String> ArticleNotFound(ArticleNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 

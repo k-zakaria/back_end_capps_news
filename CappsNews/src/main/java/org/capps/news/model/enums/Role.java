@@ -13,39 +13,58 @@ import java.util.stream.Collectors;
 public enum Role {
     USER(
             Set.of(
-                    PORTFOLIO_OWNER_PREVIEW_PORTFOLIO,
-                    PORTFOLIO_OWNER_MANAGE_PERSONAL_INFO,
-                    PORTFOLIO_OWNER_MANAGE_PROJECTS,
-                    PORTFOLIO_OWNER_MANAGE_EXPERIENCES,
-                    PORTFOLIO_OWNER_MANAGE_SKILLS,
-                    PORTFOLIO_OWNER_MANAGE_AWARDS,
-                    PORTFOLIO_OWNER_UPLOAD_CV,
-                    PORTFOLIO_OWNER_MANAGE_CONTACTS,
-                    PORTFOLIO_OWNER_MANAGE_CERTIFICATIONS,
-                    PORTFOLIO_OWNER_MANAGE_ACCOUNT_SETTINGS,
-                    PORTFOLIO_OWNER_VIEW_OVERVIEW,
-                    PORTFOLIO_OWNER_CHOOSE_TEMPLATE,
-                    PORTFOLIO_OWNER_REQUEST_TEMPLATE_CUSTOMIZATION,
-                    PORTFOLIO_OWNER_CHANGE_TEMPLATE,
-                    PORTFOLIO_OWNER_MANAGE_LANGUAGES,
-                    PORTFOLIO_OWNER_LINK_SUBDOMAIN,
-                    PORTFOLIO_OWNER_CONNECT_CUSTOM_DOMAIN
+                    NEWS_CONTRIBUTOR_CREATE_ARTICLE,
+                    NEWS_CONTRIBUTOR_EDIT_ARTICLE,
+                    NEWS_CONTRIBUTOR_DELETE_ARTICLE,
+                    NEWS_CONTRIBUTOR_PUBLISH_ARTICLE,
+                    NEWS_CONTRIBUTOR_VIEW_OWN_ARTICLES,
+                    NEWS_CONTRIBUTOR_UPLOAD_MEDIA,
+                    NEWS_CONTRIBUTOR_MANAGE_MEDIA,
+                    NEWS_CONTRIBUTOR_MANAGE_PROFILE,
+                    NEWS_CONTRIBUTOR_CHANGE_PASSWORD,
+                    NEWS_CONTRIBUTOR_MODERATE_COMMENTS,
+                    NEWS_CONTRIBUTOR_MANAGE_CATEGORIES,
+                    NEWS_CONTRIBUTOR_MANAGE_TAGS,
+                    NEWS_CONTRIBUTOR_VIEW_ARTICLE_STATS
             )
     ),
+
+//    AUTHOR(
+//            Set.of(
+//                    NEWS_CONTRIBUTOR_CREATE_ARTICLE,
+//                    NEWS_CONTRIBUTOR_EDIT_ARTICLE,
+//                    NEWS_CONTRIBUTOR_DELETE_ARTICLE,
+//                    NEWS_CONTRIBUTOR_PUBLISH_ARTICLE,
+//                    NEWS_CONTRIBUTOR_VIEW_OWN_ARTICLES,
+//                    NEWS_CONTRIBUTOR_UPLOAD_MEDIA,
+//                    NEWS_CONTRIBUTOR_MANAGE_MEDIA,
+//                    NEWS_CONTRIBUTOR_MANAGE_PROFILE
+//
+//            )
+//    ),
 
     ADMIN(
             Set.of(
                     ADMIN_VIEW_USERS,
                     ADMIN_MANAGE_USERS,
-                    ADMIN_VIEW_STATISTICS,
-                    ADMIN_ADD_TEMPLATE,
-                    ADMIN_EDIT_TEMPLATE,
-                    ADMIN_DELETE_TEMPLATE,
-                    ADMIN_SET_TEMPLATE_PRICING,
-                    ADMIN_CREATE_PORTFOLIO,
-                    ADMIN_VIEW_PORTFOLIO,
-                    ADMIN_EDIT_PORTFOLIO,
-                    ADMIN_DELETE_PORTFOLIO
+                    ADMIN_ASSIGN_ROLES,
+                    ADMIN_VIEW_ALL_ARTICLES,
+                    ADMIN_EDIT_ALL_ARTICLES,
+                    ADMIN_DELETE_ALL_ARTICLES,
+                    ADMIN_PUBLISH_ANY_ARTICLE,
+                    ADMIN_MANAGE_MEDIA_LIBRARY,
+                    ADMIN_MODERATE_ALL_COMMENTS ,
+                    ADMIN_MANAGE_CATEGORIES,
+                    ADMIN_MANAGE_TAGS,
+                    ADMIN_MANAGE_TEMPLATES,
+                    ADMIN_CUSTOMIZE_TEMPLATES,
+                    ADMIN_MANAGE_SITE_SETTINGS,
+                    ADMIN_MANAGE_SEO_SETTINGS,
+                    ADMIN_MANAGE_ANALYTICS,
+                    ADMIN_VIEW_SITE_STATS,
+                    ADMIN_GENERATE_REPORTS,
+                    ADMIN_MANAGE_SUBSCRIPTIONS,
+                    ADMIN_MANAGE_PAYMENTS
             )
     );
 
