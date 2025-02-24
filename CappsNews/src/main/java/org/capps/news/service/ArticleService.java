@@ -9,7 +9,7 @@ import org.capps.news.repository.CategoryRepository;
 import org.capps.news.repository.TagRepository;
 import org.capps.news.repository.UserRepository;
 import org.capps.news.web.exception.artilce.ArticleNotFoundException;
-import org.capps.news.web.exception.category.CategoryAlreadyExistsException;
+import org.capps.news.web.exception.category.CategoryNotFoundException;
 import org.capps.news.web.exception.tag.TagNotFoundException;
 import org.capps.news.web.exception.user.UserNotFoundException;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class ArticleService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Category category = categoryRepository.findById(article.getCategory().getId())
-                .orElseThrow(() -> new CategoryAlreadyExistsException("Category not found"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
 
         Set<Tag> tags = new HashSet<>();
         for (Tag tag : article.getTags()) {
@@ -81,7 +81,7 @@ public class ArticleService {
 
         if (updatedArticle.getCategory() != null) {
             Category category = categoryRepository.findById(updatedArticle.getCategory().getId())
-                    .orElseThrow(() -> new CategoryAlreadyExistsException("Category not found"));
+                    .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
             existingArticle.setCategory(category);
         }
 

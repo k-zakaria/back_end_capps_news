@@ -3,6 +3,8 @@ package org.capps.news.web.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.capps.news.web.exception.artilce.ArticleNotFoundException;
+import org.capps.news.web.exception.category.CategoryNotFoundException;
+import org.capps.news.web.exception.tag.TagNotFoundException;
 import org.capps.news.web.exception.user.UserNameAlreadyExistsException;
 import org.capps.news.web.exception.user.UserNotFoundException;
 import org.capps.news.web.exception.user.UsernameOrPasswordInvalidException;
@@ -116,7 +118,20 @@ public class GlobalExceptionHandler {
 
     //// Article Exeption
     @ExceptionHandler(ArticleNotFoundException.class)
-    public ResponseEntity<String> ArticleNotFound(ArticleNotFoundException ex){
+    public ResponseEntity<String> articleNotFound(ArticleNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /// Category Exeption
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<String> categoryNotFound(CategoryNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    //// Tag Exeption
+
+    @ExceptionHandler(TagNotFoundException.class)
+    public ResponseEntity<String> tagNotFound(TagNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

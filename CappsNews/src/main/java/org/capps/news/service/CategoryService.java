@@ -2,7 +2,7 @@ package org.capps.news.service;
 
 import org.capps.news.model.Category;
 import org.capps.news.repository.CategoryRepository;
-import org.capps.news.web.exception.category.CategoryAlreadyExistsException;
+import org.capps.news.web.exception.category.CategoryNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class CategoryService {
 
     public Category updateCategory(Long id, Category categoryDetails) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryAlreadyExistsException("Category not found"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
         category.setName(categoryDetails.getName());
         category.setDescription(categoryDetails.getDescription());
         return categoryRepository.save(category);
