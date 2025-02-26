@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;
@@ -17,29 +17,29 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping
+    @GetMapping("comments")
     public List<Comment> getAllComments() {
         return commentService.getAllComments();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/comment/{id}")
     public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/comment")
     public Comment createComment(@RequestBody Comment comment) {
         return commentService.createComment(comment);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/comment/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment commentDetails) {
         return ResponseEntity.ok(commentService.updateComment(id, commentDetails));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/comment/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();

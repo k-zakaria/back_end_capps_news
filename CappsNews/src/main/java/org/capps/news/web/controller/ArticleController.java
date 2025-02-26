@@ -6,10 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/articles")
+@RequestMapping("/api")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -27,6 +28,29 @@ public class ArticleController {
     public ResponseEntity<Article> getArticleById(@PathVariable UUID id) {
         return articleService.getArticleById(id)
                 .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("article/category/{categoryId}/latest")
+    public ResponseEntity<Article> getLatestArticleByCategoryId(@PathVariable UUID categoryId) {
+        Optional<Article> article = articleService.getLatestArticleByCategoryId(categoryId);
+        return article.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/articles/category")
+    public ResponseEntity<List<Article>> getArticlesByCategoryId(@PathVariable UUID categoryId) {
+        List<Article> articles = articleService.getArticlesByCategoryId(categoryId);
+        if (articles.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(articles);
+    }
+
+    @GetMapping("article/latest")
+    public ResponseEntity<Article> getLatestArticle() {
+        Optional<Article> article = articleService.getLatestArticle();
+        return article.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 

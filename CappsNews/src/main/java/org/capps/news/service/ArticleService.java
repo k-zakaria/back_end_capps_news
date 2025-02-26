@@ -42,6 +42,18 @@ public class ArticleService {
         return articleRepository.findById(id);
     }
 
+    public Optional<Article> getLatestArticleByCategoryId(UUID categoryId) {
+        return articleRepository.findLatestArticleByCategoryId(categoryId);
+    }
+
+    public Optional<Article> getLatestArticle() {
+        return articleRepository.findLatestArticle();
+    }
+
+    public List<Article> getArticlesByCategoryId(UUID categoryId) {
+        return articleRepository.findByCategoryId(categoryId);
+    }
+
     public Article createArticle(Article article) {
         User user = userRepository.findById(article.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
