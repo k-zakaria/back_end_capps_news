@@ -1,0 +1,232 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1739530209922-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_article
+                  name: id
+                  type: UUID
+              - column:
+                  name: image
+                  type: VARCHAR(255)
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: category_id
+                  type: BIGINT
+            tableName: article
+  - changeSet:
+      id: 1739530209922-2
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: article_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: tag_id
+                  type: BIGINT
+            tableName: article_tags
+  - changeSet:
+      id: 1739530209922-3
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_categories
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+            tableName: categories
+  - changeSet:
+      id: 1739530209922-4
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_comments
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: comments
+                  type: VARCHAR(255)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: attoles_id
+                  type: UUID
+            tableName: comments
+  - changeSet:
+      id: 1739530209922-5
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_notifications
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: is_read
+                  type: BOOLEAN
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: user_id
+                  type: BIGINT
+            tableName: notifications
+  - changeSet:
+      id: 1739530209922-6
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tags
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: tags
+  - changeSet:
+      id: 1739530209922-8
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_CATEGORY
+            referencedColumnNames: id
+            referencedTableName: categories
+  - changeSet:
+      id: 1739530209922-9
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1739530209922-10
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: attoles_id
+            baseTableName: comments
+            constraintName: FK_COMMENTS_ON_ATTOLES
+            referencedColumnNames: id
+            referencedTableName: article
+  - changeSet:
+      id: 1739530209922-11
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: comments
+            constraintName: FK_COMMENTS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1739530209922-12
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: notifications
+            constraintName: FK_NOTIFICATIONS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1739530209922-13
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: article_id
+            baseTableName: article_tags
+            constraintName: fk_arttag_on_article
+            referencedColumnNames: id
+            referencedTableName: article
+  - changeSet:
+      id: 1739530209922-14
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: tag_id
+            baseTableName: article_tags
+            constraintName: fk_arttag_on_tag
+            referencedColumnNames: id
+            referencedTableName: tags
+
