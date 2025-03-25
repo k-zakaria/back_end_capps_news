@@ -31,7 +31,6 @@ public class ArticleService {
     private final StorageService storageService;
 
 
-
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
