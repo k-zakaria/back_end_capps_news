@@ -2,9 +2,10 @@ package org.capps.news.web.exception;
 
 
 import io.jsonwebtoken.ExpiredJwtException;
-import org.capps.news.web.exception.artilce.ArticleNotFoundException;
+import org.capps.news.web.exception.artilce.*;
 import org.capps.news.web.exception.category.CategoryNotFoundException;
 import org.capps.news.web.exception.tag.TagNotFoundException;
+import org.capps.news.web.exception.user.UnauthorizedRoleUpdateException;
 import org.capps.news.web.exception.user.UserNameAlreadyExistsException;
 import org.capps.news.web.exception.user.UserNotFoundException;
 import org.capps.news.web.exception.user.UsernameOrPasswordInvalidException;
@@ -23,7 +24,9 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    /** --------------------------------------- User Exceptions  */
+    /**
+     * --------------------------------------- User Exceptions
+     */
     //  ---------------  UserNameAlreadyExistsException
     @ExceptionHandler(UserNameAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -84,7 +87,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
 
-    /** --------------------------------------- Global Exceptions  */
+    /**
+     * --------------------------------------- Global Exceptions
+     */
 
     //  ---------------  FieldCannotBeNullException
     @ExceptionHandler(FieldCannotBeNullException.class)
@@ -118,23 +123,101 @@ public class GlobalExceptionHandler {
 
     //// Article Exeption
     @ExceptionHandler(ArticleNotFoundException.class)
-    public ResponseEntity<String> articleNotFound(ArticleNotFoundException ex){
+    public ResponseEntity<String> articleNotFound(ArticleNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedArticleUpdateException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedArticleUpdate(
+            UnauthorizedArticleUpdateException ex,
+            WebRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UnauthorizedArticleDeleteException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedArticleDelete(
+            UnauthorizedArticleDeleteException ex,
+            WebRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
     /// Category Exeption
     @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<String> categoryNotFound(CategoryNotFoundException ex){
+    public ResponseEntity<String> categoryNotFound(CategoryNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     //// Tag Exeption
 
     @ExceptionHandler(TagNotFoundException.class)
-    public ResponseEntity<String> tagNotFound(TagNotFoundException ex){
+    public ResponseEntity<String> tagNotFound(TagNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UnauthorizedRoleUpdateException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedRoleUpdate(
+            UnauthorizedRoleUpdateException ex,
+            WebRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
 
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
 
+    @ExceptionHandler(UnauthorizedArticleAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedArticleAccess(
+            UnauthorizedArticleAccessException ex,
+            WebRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UnauthorizedPublicationException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedPublication(
+            UnauthorizedPublicationException ex,
+            WebRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
 }
+
+
+
+
+
+

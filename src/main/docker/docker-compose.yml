@@ -1,18 +1,14 @@
-version: '3.8'
-
+name: cappsnews
 services:
   postgres:
-    image: 'postgres:17'
     container_name: cappsnews_db
+    image: 'postgres:17'
     environment:
-      POSTGRES_USER: cappsnews
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: cappsnews
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - 'POSTGRES_DB=cappsnews'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=cappsnews'
     ports:
-      - "5432:5432"
-    restart: always
-
+      - '5433:5432'
 volumes:
   postgres_data:
+    driver: local

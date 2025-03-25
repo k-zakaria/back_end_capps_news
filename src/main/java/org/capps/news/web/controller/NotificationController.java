@@ -2,6 +2,7 @@ package org.capps.news.web.controller;
 
 import org.capps.news.model.Notification;
 import org.capps.news.service.NotificationService;
+import org.capps.news.service.interfaces.NotificationServiceInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
-    private final NotificationService notificationService;
+    private final NotificationServiceInterface notificationService;
 
     public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;

@@ -3,6 +3,7 @@ package org.capps.news.web.controller;
 import lombok.AllArgsConstructor;
 import org.capps.news.model.Comment;
 import org.capps.news.service.CommentService;
+import org.capps.news.service.interfaces.CommentServiceInterface;
 import org.capps.news.web.vm.mapper.CommentVMMapper;
 import org.capps.news.web.vm.request.CommentReqVM;
 import org.capps.news.web.vm.response.CommentResVM;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/comments")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceInterface commentService;
     private final CommentVMMapper commentVMMapper;
 
     @Autowired
