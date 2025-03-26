@@ -3,6 +3,7 @@ package org.capps.news.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +21,20 @@ public class Article {
 
     private String image;
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String description;
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "is_published")
+    private boolean published = false;
+
+    @Column(name = "publication_date")
+    private LocalDateTime publicationDate;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

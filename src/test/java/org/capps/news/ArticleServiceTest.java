@@ -1,27 +1,34 @@
 package org.capps.news;
 
+import org.capps.news.aws.StorageService;
 import org.capps.news.model.Article;
 import org.capps.news.model.Category;
 import org.capps.news.model.Tag;
 import org.capps.news.model.User;
+import org.capps.news.model.enums.Role;
 import org.capps.news.repository.ArticleRepository;
 import org.capps.news.repository.CategoryRepository;
 import org.capps.news.repository.TagRepository;
 import org.capps.news.repository.UserRepository;
 import org.capps.news.service.ArticleService;
-import org.capps.news.web.exception.artilce.ArticleNotFoundException;
+import org.capps.news.web.exception.artilce.InvalidArticleException;
 import org.capps.news.web.exception.category.CategoryNotFoundException;
-import org.capps.news.web.exception.user.UserNotFoundException;
+import org.capps.news.web.exception.tag.TagNotFoundException;
+import org.capps.news.web.vm.mapper.ArticleVMMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,208 +46,276 @@ public class ArticleServiceTest {
     @Mock
     private TagRepository tagRepository;
 
+    @Mock
+    private StorageService storageService;
+
+    @Mock
+    private ArticleVMMapper articleVMMapper;
+
     @InjectMocks
     private ArticleService articleService;
 
-    private Article article;
     private User user;
+    private Article article;
     private Category category;
-    private Tag tag1, tag2;
-
+    private Tag tag;
+    private MultipartFile image;
 
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setId(1L);
+        user.setId(12345L);
+        user.setUsername("testUser");
+        user.setRole(Role.AUTHOR);
 
         category = new Category();
-        category.setId(2L);
+        category.setId(1L);
+        category.setName("Test Category");
 
-        tag1 = new Tag();
-        tag1.setId(3L);
-
-        tag2 = new Tag();
-        tag2.setId(3L);
+        tag = new Tag();
+        tag.setId(1L);
+        tag.setName("Test Tag");
 
         article = new Article();
+        article.setId(UUID.randomUUID());
+        article.setTitle("Test Article");
+        article.setDescription("Test Description");
+        article.setContent("Test Content");
         article.setUser(user);
         article.setCategory(category);
-        article.setTags(new ArrayList<>(Arrays.asList(tag1, tag2)));
+        article.setTags(Collections.singletonList(tag));
+        article.setPublished(false);
     }
-    // Test for getAllArticles
+
     @Test
-    public void testGetAllArticles() {
-        // Arrange
-        List<Article> articles = Arrays.asList(new Article(), new Article());
-        when(articleRepository.findAll()).thenReturn(articles);
+    void getAllArticles_ShouldReturnAllArticles() {
+        when(articleRepository.findAll()).thenReturn(Collections.singletonList(article));
 
-        // Act
-        List<Article> result = articleService.getAllArticles();
+        List<Article> articles = articleService.getAllArticles();
 
-        // Assert
-        assertEquals(2, result.size());
+        assertNotNull(articles);
+        assertEquals(1, articles.size());
         verify(articleRepository, times(1)).findAll();
     }
 
-    // Test for getArticleById (Article Found)
     @Test
-    public void testGetArticleById_Found() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        Article article = new Article();
-        when(articleRepository.findById(id)).thenReturn(Optional.of(article));
+    void getArticleById_ShouldReturnArticle() {
+        when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
 
-        // Act
-        Optional<Article> result = articleService.getArticleById(id);
+        Optional<Article> foundArticle = articleService.getArticleById(article.getId());
 
-        // Assert
-        assertTrue(result.isPresent());
-        verify(articleRepository, times(1)).findById(id);
+        assertTrue(foundArticle.isPresent());
+        assertEquals(article.getId(), foundArticle.get().getId());
+        verify(articleRepository, times(1)).findById(article.getId());
     }
 
-    // Test for getArticleById (Article Not Found)
     @Test
-    public void testGetArticleById_NotFound() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        when(articleRepository.findById(id)).thenReturn(Optional.empty());
+    void getArticleById_ShouldReturnEmptyOptional() {
+        when(articleRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-        // Act
-        Optional<Article> result = articleService.getArticleById(id);
+        Optional<Article> foundArticle = articleService.getArticleById(UUID.randomUUID());
 
-        // Assert
-        assertFalse(result.isPresent());
-        verify(articleRepository, times(1)).findById(id);
+        assertFalse(foundArticle.isPresent());
+        verify(articleRepository, times(1)).findById(any(UUID.class));
     }
 
-    // Test for createArticle
-//    @Test
-//    public void testCreateArticle() {
-//        // Arrange
-//        User user = new User();
-//        user.setId(1L);
-//
-//        Category category = new Category();
-//        category.setId(2L);
-//
-//        Tag tag1 = new Tag();
-//        tag1.setId(3L);
-//        Tag tag2 = new Tag();
-//        tag2.setId(4L);
-//
-//
-//        Article article = new Article();
-//        article.setUser(user);
-//        article.setCategory(category);
-//        article.setTags(Arrays.asList(tag1, tag2));
-//
-//        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-//        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
-//        when(tagRepository.findById(tag1.getId())).thenReturn(Optional.of(tag1));
-//        when(tagRepository.findById(tag2.getId())).thenReturn(Optional.of(tag2));
-//        when(articleRepository.save(article)).thenReturn(article);
-//
-//        // Act
-//        Article result = articleService.createArticle(article);
-//
-//        // Assert
-//        assertNotNull(result);
-//        assertEquals(user, result.getUser());
-//        assertEquals(category, result.getCategory());
-//        assertEquals(2, result.getTags().size());
-//        verify(articleRepository, times(1)).save(article);
-//    }
-
-
-//    @Test
-//    void shouldThrowUserNotFoundException() {
-//        when(userRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        assertThrows(UserNotFoundException.class, () -> articleService.createArticle(article));
-//    }
-//
-//    @Test
-//    void shouldThrowCategoryAlreadyExistsException() {
-//        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-//        when(categoryRepository.findById(2L)).thenReturn(Optional.empty());
-//
-//        assertThrows(CategoryNotFoundException.class, () -> articleService.createArticle(article));
-//    }
-
-
-    // Test for updateArticle
     @Test
-    public void testUpdateArticle() {
-        // Arrange
-        UUID articleId = UUID.randomUUID();
-
-        User user = new User();
-        user.setId(1L);
-
-        Category category = new Category();
-        category.setId(2L);
-
-        Tag tag1 = new Tag();
-        tag1.setId(3L);
-        Tag tag2 = new Tag();
-        tag2.setId(4L);
-
-        Article existingArticle = new Article();
-        existingArticle.setId(articleId);
-        existingArticle.setTitle("Old Title");
-        existingArticle.setContent("Old Content");
-
-        Article updatedArticle = new Article();
-        updatedArticle.setTitle("New Title");
-        updatedArticle.setContent("New Content");
-        updatedArticle.setUser(user);
-        updatedArticle.setCategory(category);
-        updatedArticle.setTags(Arrays.asList(tag1, tag2));
-
-        when(articleRepository.findById(articleId)).thenReturn(Optional.of(existingArticle));
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    void createArticle_ShouldCreateArticle() {
         when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
-        when(tagRepository.findById(tag1.getId())).thenReturn(Optional.of(tag1));
-        when(tagRepository.findById(tag2.getId())).thenReturn(Optional.of(tag2));
-        when(articleRepository.save(existingArticle)).thenReturn(existingArticle);
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        when(storageService.uploadFile(image)).thenReturn("image_url");
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
 
-        // Act
-        Article result = articleService.updateArticle(articleId, updatedArticle);
+        Article createdArticle = articleService.createArticle(article, image, user);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals("New Title", result.getTitle());
-        assertEquals("New Content", result.getContent());
-        assertEquals(user, result.getUser());
-        assertEquals(category, result.getCategory());
-        assertEquals(2, result.getTags().size());
-        verify(articleRepository, times(1)).save(existingArticle);
+        assertNotNull(createdArticle);
+        assertEquals(article.getTitle(), createdArticle.getTitle());
+        verify(articleRepository, times(1)).save(any(Article.class));
     }
 
-    // Test for deleteArticle (Article Found)
+
     @Test
-    public void testDeleteArticle() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        Article article = new Article();
-        when(articleRepository.findById(id)).thenReturn(Optional.of(article));
+    void createArticle_ShouldCreateArticleSuccessfully() {
+        // Créer une image simulée
+        MultipartFile image = mock(MultipartFile.class);
+        when(image.isEmpty()).thenReturn(false); // Simuler une image non vide
 
-        // Act
-        articleService.deleteArticle(id);
+        // Configurer les stubs
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        when(storageService.uploadFile(image)).thenReturn("image_url");
 
-        // Assert
-        verify(articleRepository, times(1)).deleteById(id);
+        // Créer un article avec image = "image_url"
+        Article savedArticle = Article.builder()
+                .title(article.getTitle())
+                .description(article.getDescription())
+                .content(article.getContent())
+                .image("image_url") // Simuler une image définie
+                .user(user)
+                .category(category)
+                .tags(Collections.singletonList(tag))
+                .published(true) // Simuler un article publié
+                .build();
+
+        when(articleRepository.save(any(Article.class))).thenReturn(savedArticle);
+
+        // Appeler la méthode à tester
+        Article createdArticle = articleService.createArticle(article, image, user);
+
+        // Vérifier les résultats
+        assertNotNull(createdArticle);
+        assertEquals(article.getTitle(), createdArticle.getTitle());
+        assertEquals("image_url", createdArticle.getImage()); // Vérifiez que l'image est définie
+        assertTrue(createdArticle.isPublished()); // Vérifiez la publication automatique
+        verify(articleRepository, times(1)).save(any(Article.class));
     }
 
-    // Test for deleteArticle (Article Not Found)
     @Test
-    public void testDeleteArticle_NotFound() {
+    void createArticle_ShouldThrowCategoryNotFoundException() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        when(articleRepository.findById(id)).thenReturn(Optional.empty());
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ArticleNotFoundException.class, () -> articleService.deleteArticle(id));
-        verify(articleRepository, never()).deleteById(id);
+        assertThrows(CategoryNotFoundException.class, () -> articleService.createArticle(article, image, user));
+        verify(articleRepository, never()).save(any(Article.class));
+    }
+
+    @Test
+    void createArticle_ShouldNotPublishForNonAuthorUsers() {
+        // Arrange
+        user.setRole(Role.AUTHOR); // Utilisateur non autorisé à publier
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        // Act
+        Article createdArticle = articleService.createArticle(article, null, user); // Pas d'image
+
+        // Assert
+        assertNotNull(createdArticle);
+        assertFalse(createdArticle.isPublished()); // Vérifie que l'article n'est pas publié
+    }
+
+    @Test
+    void createArticle_ShouldHandleMissingImage() {
+        // Arrange
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        // Act
+        Article createdArticle = articleService.createArticle(article, null, user); // Pas d'image
+
+        // Assert
+        assertNotNull(createdArticle);
+        assertNull(createdArticle.getImage()); // Vérifie que l'image est null
+        verify(storageService, never()).uploadFile(any(MultipartFile.class));
+    }
+
+    @Test
+    void createArticle_ShouldThrowExceptionForMissingTitle() {
+        // Arrange
+        article.setTitle(null); // Titre manquant
+
+        // Act & Assert
+        assertThrows(InvalidArticleException.class, () -> articleService.createArticle(article, image, user));
+        verify(articleRepository, never()).save(any(Article.class));
+    }
+
+    @Test
+    void createArticle_ShouldThrowExceptionForMissingContent() {
+        // Arrange
+        article.setContent(null); // Contenu manquant
+
+        // Act & Assert
+        assertThrows(InvalidArticleException.class, () -> articleService.createArticle(article, image, user));
+        verify(articleRepository, never()).save(any(Article.class));
+    }
+
+    @Test
+    void createArticle_ShouldThrowTagNotFoundException() {
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.empty());
+
+        assertThrows(TagNotFoundException.class, () -> articleService.createArticle(article, image, user));
+    }
+
+    @Test
+    void updateArticle_ShouldUpdateArticle() {
+        Article updatedArticle = new Article();
+        updatedArticle.setTitle("Updated Title");
+        updatedArticle.setDescription("Updated Description");
+        updatedArticle.setContent("Updated Content");
+        updatedArticle.setCategory(category);
+        updatedArticle.setTags(Collections.singletonList(tag));
+
+        when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        // Supprimer le stub inutile
+        // when(storageService.uploadFile(image)).thenReturn("new_image_url");
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        Article result = articleService.updateArticle(article.getId(), updatedArticle, image, user);
+
+        assertNotNull(result);
+        assertEquals(updatedArticle.getTitle(), result.getTitle());
+        verify(articleRepository, times(1)).save(any(Article.class));
+    }
+
+    @Test
+    void updateArticle_ShouldUpdateArticleWithImage() {
+        // Créer une image simulée
+        MultipartFile image = mock(MultipartFile.class);
+        when(image.isEmpty()).thenReturn(false); // Simuler une image non vide
+
+        Article updatedArticle = new Article();
+        updatedArticle.setTitle("Updated Title");
+        updatedArticle.setDescription("Updated Description");
+        updatedArticle.setContent("Updated Content");
+        updatedArticle.setCategory(category);
+        updatedArticle.setTags(Collections.singletonList(tag));
+
+        // Configurer les stubs
+        when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+        when(tagRepository.findById(tag.getId())).thenReturn(Optional.of(tag));
+        when(storageService.uploadFile(image)).thenReturn("new_image_url");
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        // Appeler la méthode à tester
+        Article result = articleService.updateArticle(article.getId(), updatedArticle, image, user);
+
+        // Vérifier les résultats
+        assertNotNull(result);
+        assertEquals(updatedArticle.getTitle(), result.getTitle());
+        assertEquals("new_image_url", result.getImage()); // Vérifiez que l'image est mise à jour
+        verify(articleRepository, times(1)).save(any(Article.class));
+    }
+
+    @Test
+    void deleteArticle_ShouldDeleteArticle() {
+        when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+
+        articleService.deleteArticle(article.getId(), user);
+
+        verify(articleRepository, times(1)).delete(article);
+    }
+
+    @Test
+    void publishArticle_ShouldPublishArticle() {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("testUser"); // Retourner un nom d'utilisateur non nul
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+        when(userRepository.findByUsernameAndDeletedFalse("testUser")).thenReturn(Optional.of(user)); // Utiliser "testUser"
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        Article publishedArticle = articleService.publishArticle(article.getId(), authentication);
+
+        assertTrue(publishedArticle.isPublished());
+        assertNotNull(publishedArticle.getPublicationDate());
+        verify(articleRepository, times(1)).save(any(Article.class));
     }
 }

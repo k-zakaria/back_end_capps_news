@@ -1,17 +1,26 @@
 package org.capps.news.web.vm.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ArticleResVM {
-    private String image;
+    private UUID id;
     private String title;
     private String description;
     private String content;
+    private String image;
+    private boolean published;
+    private LocalDateTime publicationDate;
+    private UserSummaryDTO author;
+    private CategorySummaryDTO category;
+    private List<TagSummaryDTO> tags;
 }
+
