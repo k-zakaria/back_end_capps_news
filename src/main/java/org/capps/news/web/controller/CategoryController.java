@@ -2,6 +2,7 @@ package org.capps.news.web.controller;
 
 import org.capps.news.model.Category;
 import org.capps.news.service.CategoryService;
+import org.capps.news.service.interfaces.CategoryServiceInterface;
 import org.capps.news.web.vm.mapper.CategoryVMMapper;
 import org.capps.news.web.vm.request.CategoryReqVM;
 import org.capps.news.web.vm.response.CategoryResVM;
@@ -14,10 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryServiceInterface categoryService;
     private final CategoryVMMapper categoryVMMapper;
 
     @Autowired
