@@ -29,19 +29,16 @@ public enum Role {
             )
     ),
 
-//    AUTHOR(
-//            Set.of(
-//                    NEWS_CONTRIBUTOR_CREATE_ARTICLE,
-//                    NEWS_CONTRIBUTOR_EDIT_ARTICLE,
-//                    NEWS_CONTRIBUTOR_DELETE_ARTICLE,
-//                    NEWS_CONTRIBUTOR_PUBLISH_ARTICLE,
-//                    NEWS_CONTRIBUTOR_VIEW_OWN_ARTICLES,
-//                    NEWS_CONTRIBUTOR_UPLOAD_MEDIA,
-//                    NEWS_CONTRIBUTOR_MANAGE_MEDIA,
-//                    NEWS_CONTRIBUTOR_MANAGE_PROFILE
-//
-//            )
-//    ),
+    AUTHOR(
+            Set.of(
+                    NEWS_CONTRIBUTOR_CREATE_ARTICLE,
+                    NEWS_CONTRIBUTOR_EDIT_ARTICLE,
+                    NEWS_CONTRIBUTOR_DELETE_ARTICLE,
+                    NEWS_CONTRIBUTOR_PUBLISH_ARTICLE,
+                    NEWS_CONTRIBUTOR_VIEW_OWN_ARTICLES,
+                    NEWS_CONTRIBUTOR_UPLOAD_MEDIA
+            )
+    ),
 
     ADMIN(
             Set.of(

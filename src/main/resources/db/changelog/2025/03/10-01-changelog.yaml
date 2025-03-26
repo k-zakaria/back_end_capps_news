@@ -1,0 +1,98 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741613630115-9
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            tableName: article
+            columns:
+              - column:
+                  name: is_published
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: publication_date
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 1741613630115-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: created_at
+            columnDataType: datetime
+
+  - changeSet:
+      id: 1741613630115-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: email
+            columnDataType: varchar(255)
+
+  - changeSet:
+      id: 1741613630115-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: password
+            columnDataType: varchar(255)
+
+  - changeSet:
+      id: 1741613630115-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            tableName: users
+            columnName: preferred_language
+            newDataType: VARCHAR(255)
+
+  - changeSet:
+      id: 1741613630115-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            tableName: users
+            columnName: role
+            newDataType: VARCHAR(255)
+
+  - changeSet:
+      id: 1741613630115-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: role
+            columnDataType: varchar(255)
+
+  - changeSet:
+      id: 1741613630115-7
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: updated_at
+            columnDataType: datetime
+
+  - changeSet:
+      id: 1741613630115-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: username
+            columnDataType: varchar(255)

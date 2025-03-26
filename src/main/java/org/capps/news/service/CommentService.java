@@ -11,13 +11,14 @@ import org.capps.news.web.exception.comment.CommentNotFoundException;
 import org.capps.news.web.exception.user.UserNotFoundException;
 import org.capps.news.web.vm.mapper.CommentVMMapper;
 import org.capps.news.web.vm.request.CommentReqVM;
+import org.capps.news.service.interfaces.CommentServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CommentService {
+public class CommentService implements CommentServiceInterface {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -34,14 +35,17 @@ public class CommentService {
         this.commentVMMapper = commentVMMapper;
     }
 
+    @Override
     public List<Comment> getAllComments() {
         return commentRepository.findAll();
     }
 
+    @Override
     public Optional<Comment> getCommentById(Long id) {
         return commentRepository.findById(id);
     }
 
+    @Override
     public Comment createComment(CommentReqVM commentReqVM, String username) {
         User user = userRepository.findByUsernameAndDeletedFalse(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -57,19 +61,21 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    @Override
     public Comment updateComment(Long id, Comment commentDetails) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
         userRepository.findById(comment.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException("Comment not Found"));
         articleRepository.findById(comment.getArticle().getId())
-                .orElseThrow(() -> new ArticleNotFoundException("Aritcle Not Found"));
+                .orElseThrow(() -> new ArticleNotFoundException("Article Not Found"));
         comment.setUsername(commentDetails.getUsername());
         comment.setEmail(commentDetails.getEmail());
         comment.setComments(commentDetails.getComments());
         return commentRepository.save(comment);
     }
 
+    @Override
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }

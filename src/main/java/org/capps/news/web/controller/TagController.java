@@ -2,6 +2,7 @@ package org.capps.news.web.controller;
 
 import org.capps.news.model.Tag;
 import org.capps.news.service.TagService;
+import org.capps.news.service.interfaces.TagServiceInterface;
 import org.capps.news.web.vm.mapper.TagVMMapper;
 import org.capps.news.web.vm.request.TagReqVM;
 import org.capps.news.web.vm.response.TagResVM;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/tags")
 public class TagController {
 
-    private final TagService tagService;
+    private final TagServiceInterface tagService;
     private final TagVMMapper tagVMMapper;
 
     @Autowired

@@ -1,6 +1,7 @@
 package org.capps.news.repository;
 
 import org.capps.news.model.User;
+import org.capps.news.model.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByVerificationToken(String token);
 
     List<User> findAllByPasswordResetToken(String token);
+
+    List<User> findAllByDeletedFalse();
+
 
 
 }

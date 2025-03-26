@@ -19,7 +19,6 @@ public class ArticleReqVM {
     private String title;
     private String description;
     private String content;
-    private User user;
-    private List<Tag> tags;
-    private Category category;
+    private List<Long> tagIds;  // Changez de List<Tag> à List<Long>
+    private Long categoryId;    // Changez de Category à Long
 }
